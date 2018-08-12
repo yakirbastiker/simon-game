@@ -9,7 +9,8 @@ var game = {
     color: ['red', 'blue', 'green', 'yellow'],
     currentGame: [],
     userChoice: [],
-    userTurn: 'false'
+    userTurn: 'false',
+    stop: 5
 }
 
 document.querySelector('.btn').addEventListener('click', init);
@@ -18,8 +19,8 @@ document.querySelector('.btn').addEventListener('click', init);
 function init() {
 
     var num = document.getElementById('inputNum').value;
-
-    startGame();
+    
+    startGame(num);
     addToGame(num);
     showMoves();
 }
@@ -29,10 +30,8 @@ function init() {
 function addToGame(num) {
     for (var i = 0; i < num; i++) {
         game.currentGame.push(game.color[randomNumber(game.color.length)]);
-        //console.log(**********);
-        //console.log(game.currentGame);
-        //console.log(**********);
     }
+    console.log(game.currentGame);
 }
 
 function randomNumber(num) {
@@ -40,12 +39,17 @@ function randomNumber(num) {
     return newNum;
 }
 
-function startGame() {
+function startGame(num) {
     //console.log('new game start..');
+    game.stop = num;
     game.currentGame = [];
     game.count = 0;
-    clearPlayer();
 
+    var text = document.getElementById('textCount');
+    text.innerHTML = 'Count: <span id="cur">0</span>';
+
+    showCount();
+    clearPlayer();
 }
 
 //for show moves of colors with order
@@ -57,7 +61,7 @@ function showMoves() {
 
     var i = 0;
     var moves = setInterval(function () {
-        showColor(game.currentGame[i],500);
+        showColor(game.currentGame[i], 500);
         i++;
         if (i > game.count) {
             game.userTurn = 'true';
@@ -68,7 +72,7 @@ function showMoves() {
 }
 
 //show each color 
-function showColor(color,sec) {
+function showColor(color, sec) {
     //select the correct box
     var box = document.querySelector(`.${color}`);
     box.style.backgroundColor = color;
@@ -83,7 +87,7 @@ function clearPlayer() {
     game.userChoice = [];
 }
 
-
+//toggle event
 function userEvent() {
 
     var con = document.querySelectorAll('.box');
@@ -107,20 +111,17 @@ function userClick(e) {
 
     //show color of box  
     var box = setInterval(function () {
-        showColor(e.target.innerHTML,300);
+        showColor(e.target.innerHTML, 300);
         clearInterval(box);
+    }, 600);
 
-        //send answers
+    //send answers
     setTimeout(function () {
         if (game.userChoice.length > game.count) {
             checkAnswer();
         }
-    }, 900);
+    }, 800);
 
-
-    }, 400);
-
-    
 }
 
 
@@ -129,7 +130,7 @@ function checkAnswer() {
 
     var newarr = [];
 
-    for (var i = 0; i < game.userChoice.length || i == 0; i++) {
+    for (var i = 0; i < game.userChoice.length || i === 0; i++) {
 
         if (game.userChoice[i] == game.currentGame[i]) {
             newarr.push(true);
@@ -143,20 +144,50 @@ function checkAnswer() {
     })
 
     if (check === true) {
-        alert('correct');
+        //console.log('correct');
+        titleChange(true);
         game.count++;
-        //add count
-        showCount()
-        //console.log('new round');
-        showMoves();
+
+        if (game.count == game.stop) {
+            userWin();
+        } else {
+            showCount();
+            showMoves();
+        }
+
     } else {
-        alert('wrong pls try again');
+        //console.log('wrong pls try again');
+
+        titleChange(false);
         game.userChoice = [];
     }
 }
 
+//change title color 
+function titleChange(check) {
+    var title = document.getElementById('title');
+    var currentColor = title.style.color;
+    var color;
+    if (check === true) {
+        color = 'seagreen';
+    } else {
+        color = 'darkred';
+    }
 
-function showCount(){
+    title.style.color = color;
+    setTimeout(function () {
+        title.style.color = currentColor;
+    }, 300);
+}
+
+
+function showCount() {
     var cur = document.getElementById('cur');
-    cur.innerText = 'count: ' + game.count;
+    cur.innerText = game.count;
+}
+
+
+function userWin() {
+    var text = document.getElementById('textCount');
+    text.innerHTML = 'User Win The Game!!!';
 }

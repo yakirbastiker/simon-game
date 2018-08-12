@@ -1,18 +1,25 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
 body{
     width: 100vw;
     height: 100vh;
     position: relative;
     background-color: #333;
+    overflow: hidden;
 }
 
-h1{
+#title{
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
     font-size: 50px;
     font-family: Arial, Helvetica, sans-serif;
     color: #fff;
-    margin-bottom: 15px;
+    margin-top: 10px;
+    text-transform: capitalize;
 }
 
 .container {   
@@ -57,16 +64,27 @@ h1{
 }
 
 #inputNum {
-    width: 130px;
-    height: 20px;
+    width: 150px;
+    height: 25px;
 }
 
 .btn {
     width: 130px;
     height: 30px;
     color: #333;
+    font-size: 20px;
     background-color: burlywood;
     border: none;
+}
+
+
+#textCount {
+    color: #fff;
+    margin-top: 5px;
+}
+
+#cur {
+    color: forestgreen;
 }
 
 
